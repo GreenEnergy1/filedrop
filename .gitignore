@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+logs/
+settings.json
+
+# Served files stay out of git; keep the folder itself
+files/*
+!files/.gitkeep

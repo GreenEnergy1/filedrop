@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>{{ title|lower }}</h1>
+        <p class="summary">
+          {{ files|length }} file{{ '' if files|length == 1 else 's' }}, {{ total }} in total
+        </p>
+      </header>
+
+      {% if files %}
+      <label class="filter">
+        <span>Filter files</span>
+        <input id="filter" type="search" placeholder="Type part of a file name" autocomplete="off" />
+      </label>
+
+      <table id="files">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col" class="num">Size</th>
+            <th scope="col" class="when">Modified</th>
+            <th scope="col"><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in files %}
+          <tr class="file" data-name="{{ f.path|lower }}">
+            <td class="name">{{ f.path }}</td>
+            <td class="num">{{ f.size_label }}</td>
+            <td class="when">{{ f.modified.strftime('%Y-%m-%d') }}</td>
+            <td class="actions">
+              <button
+                type="button"
+                class="hash-btn"
+                data-url="{{ url_for('checksum', filename=f.path) }}"
+              >
+                Show SHA-256
+              </button>
+              <a class="dl" href="{{ url_for('download', filename=f.path) }}">Download</a>
+            </td>
+          </tr>
+          <tr class="hash-row" hidden>
+            <td colspan="4"><code></code></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p id="no-match" hidden>No file matches that name.</p>
+      {% else %}
+      <section class="empty">
+        <p>Nothing to download yet.</p>
+        <p>Copy files into <code>{{ files_dir }}</code> and refresh this page.</p>
+      </section>
+      {% endif %}
+    </main>
+
+    <script>
+      const filter = document.getElementById("filter");
+      if (filter) {
+        const rows = [...document.querySelectorAll("tr.file")];
+        const none = document.getElementById("no-match");
+        filter.addEventListener("input", () => {
+          const q = filter.value.trim().toLowerCase();
+          let shown = 0;
+          rows.forEach((row) => {
+            const match = row.dataset.name.includes(q);
+            row.hidden = !match;
+            row.nextElementSibling.hidden = true;
+            if (match) shown++;
+          });
+          none.hidden = shown !== 0;
+        });
+      }
+
+      document.querySelectorAll(".hash-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const row = btn.closest("tr").nextElementSibling;
+          const code = row.querySelector("code");
+          if (!row.hidden) {
+            row.hidden = true;
+            btn.textContent = "Show SHA-256";
+            return;
+          }
+          btn.disabled = true;
+          btn.textContent = "Hashing...";
+          try {
+            const res = await fetch(btn.dataset.url);
+            if (!res.ok) throw new Error(res.status);
+            code.textContent = (await res.json()).sha256;
+          } catch (err) {
+            code.textContent = "Could not read this file. Check that it still exists.";
+          }
+          row.hidden = false;
+          btn.disabled = false;
+          btn.textContent = "Hide SHA-256";
+        });
+      });
+    </script>
+  </body>
+</html>
