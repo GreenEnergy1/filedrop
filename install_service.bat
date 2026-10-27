@@ -3,7 +3,7 @@ setlocal
 cd /d "%~dp0"
 set "ROOT=%CD%"
 set "SVC=Filedrop"
-set "PORT=8080"
+set "PORT=1080"
 
 net session >nul 2>&1
 if errorlevel 1 (
@@ -55,12 +55,13 @@ if not exist logs mkdir logs
 "%NSSM%" set %SVC% AppExit Default Restart
 
 netsh advfirewall firewall add rule name="Filedrop" dir=in action=allow protocol=TCP localport=%PORT% >nul
+netsh advfirewall firewall add rule name="Filedrop Discovery" dir=in action=allow protocol=UDP localport=5353 remoteip=localsubnet >nul
 
 "%NSSM%" start %SVC%
 if errorlevel 1 goto :failed
 
 echo.
-echo Filedrop is running as a Windows service on port %PORT%.
+echo Filedrop is running as a Windows service on port %PORT% and advertising itself on the LAN.
 echo Open http://localhost:%PORT% to browse the selected folder.
 pause
 exit /b 0

@@ -101,7 +101,16 @@ def healthz():
 
 
 if __name__ == "__main__":
-    from waitress import serve
+    import logging
 
+    from waitress import serve
+    from discovery import ServiceAdvertisement
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     print(f"Serving {FILES_DIR} on http://{Config.HOST}:{Config.PORT}")
-    serve(app, host=Config.HOST, port=Config.PORT, threads=8)
+    advertisement = ServiceAdvertisement()
+    advertisement.start()
+    try:
+        serve(app, host=Config.HOST, port=Config.PORT, threads=8)
+    finally:
+        advertisement.close()

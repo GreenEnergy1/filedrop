@@ -1,0 +1,42 @@
+{
+  "name": "filedrop-discovery-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Find Filedrop servers on the local network and open them in a browser.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win nsis",
+    "dist:mac": "electron-builder --mac dmg",
+    "dist:linux": "electron-builder --linux AppImage"
+  },
+  "dependencies": {
+    "bonjour": "^3.5.1"
+  },
+  "devDependencies": {
+    "electron": "^44.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "local.filedrop.discovery",
+    "productName": "Filedrop",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "src/assets/icon.png",
+      "target": ["nsis"]
+    },
+    "mac": {
+      "target": ["dmg"]
+    },
+    "linux": {
+      "icon": "src/assets/icon.png",
+      "target": ["AppImage"]
+    }
+  }
+}

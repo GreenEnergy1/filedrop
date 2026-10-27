@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from config import BASE_DIR, Config
+from config import BASE_DIR, Config, load_settings
 
 
 def main():
@@ -20,9 +20,9 @@ def main():
         return 1
 
     settings_path = Path(BASE_DIR) / "settings.json"
-    settings_path.write_text(
-        json.dumps({"files_dir": str(selected)}, indent=2) + "\n", encoding="utf-8"
-    )
+    settings = load_settings()
+    settings["files_dir"] = str(selected)
+    settings_path.write_text(json.dumps(settings, indent=2) + "\n", encoding="utf-8")
     print(f"Saved. Filedrop will serve: {selected}")
     return 0
 

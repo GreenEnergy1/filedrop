@@ -41,8 +41,23 @@ header {
   margin-bottom: 1.5rem;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.brand img {
+  display: block;
+  width: 3.25rem;
+  height: 3.25rem;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 10px rgba(29, 79, 214, 0.16));
+}
+
 h1 {
-  margin: 0 0 0.6rem;
+  margin: 0;
   font-size: clamp(2rem, 3vw, 2.6rem);
   line-height: 1.15;
   letter-spacing: -0.05em;
@@ -51,7 +66,7 @@ h1 {
 }
 
 .summary {
-  margin: 0;
+  margin: 0 0 0 4.1rem;
   color: var(--muted);
   font-size: 0.96rem;
 }
@@ -250,6 +265,15 @@ code {
 @media (max-width: 640px) {
   main {
     padding-top: 2.25rem;
+  }
+
+  .brand img {
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+
+  .summary {
+    margin-left: 3.65rem;
   }
 
   .when,

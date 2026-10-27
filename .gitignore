@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 logs/
 settings.json
+client/node_modules/
+client/dist/
 
 # Served files stay out of git; keep the folder itself
 files/*

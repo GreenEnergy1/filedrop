@@ -28,6 +28,10 @@ run.bat
 
 On first run, the launcher asks for the folder to serve. Enter its full path, or press Enter to use the default `files/` folder. The choice is saved in `settings.json`, and changes to that folder appear without restarting. Run `python setup.py` to choose a different folder later.
 
+## Discovery client
+
+The JavaScript desktop client is in [`client/`](client/). It scans the LAN for Filedrop servers and opens the selected server in the system browser. See [`client/README.md`](client/README.md) for development and packaging instructions. The Electron client targets Windows, macOS, and Linux; Android packaging is planned separately.
+
 ## Install as a Windows service
 
 1. Download [NSSM](https://nssm.cc) and put `nssm.exe` on your `PATH`.
@@ -50,14 +54,17 @@ Set these environment variables before starting (for the service, edit them with
 | ----------------- | -------------- | -------------------------------- |
 | `FILEDROP_DIR`    | saved setup choice, otherwise `./files` | Folder to serve (overrides the saved choice) |
 | `FILEDROP_HOST`   | `0.0.0.0`      | Interface to listen on           |
-| `FILEDROP_PORT`   | `8080`         | Port                             |
+| `FILEDROP_PORT`   | `1080`         | Port                             |
 | `FILEDROP_TITLE`  | `Filedrop`     | Heading shown on the page        |
+| `FILEDROP_NAME`   | hostname-based Filedrop name | Friendly name advertised to discovery clients |
 
-To change the port for the service, edit `PORT` at the top of `install_service.bat` before installing.
+The server advertises `_filedrop._tcp.local` over mDNS/DNS-SD while it is running. The advertisement includes its friendly name, persistent server ID, and port. The server ID is stored in `settings.json` and remains stable across restarts. Devices on networks that block multicast may not see the advertisement.
+
+The Windows service installer allows the configured TCP port and mDNS UDP port 5353 through Windows Firewall for the local subnet. To change the service port, edit `PORT` at the top of `install_service.bat` before installing.
 
 ## Putting it on the internet
 
-Filedrop has no login: anyone who can reach the page can see and download everything in the folder. Only put files there that you are happy to share. For public use, run it behind Caddy or a Cloudflare Tunnel so you get HTTPS and don't have to open a port on your router.
+Filedrop has no login: anyone who can reach the page can see and download everything in the folder. Only put files there that you are happy to share. Discovery is not authentication. Keep the server on a trusted local network and do not forward its port from your router.
 
 ## Project structure
 

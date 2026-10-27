@@ -4,17 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ title }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
-    />
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" sizes="any" />
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/icon.png') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
   <body>
     <main>
       <header>
-        <h1>{{ title|lower }}</h1>
+        <div class="brand">
+          <img src="{{ url_for('static', filename='img/logo-mark.png') }}" alt="" />
+          <h1>{{ title|lower }}</h1>
+        </div>
         <p class="summary">
           {{ files|length }} file{{ '' if files|length == 1 else 's' }}, {{ total }} in total
         </p>

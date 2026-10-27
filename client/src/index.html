@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self';">
+  <title>Filedrop</title>
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page-shell">
+    <header class="page-header">
+      <div class="brand">
+        <img src="assets/logo-mark.png" alt="">
+        <h1>filedrop</h1>
+      </div>
+      <p class="summary">Find a Filedrop server on your local network</p>
+    </header>
+
+    <section class="discovery">
+      <button class="scan-button" id="scan-button" type="button">
+        <span aria-hidden="true">&#8635;</span> Scan
+      </button>
+    </section>
+
+    <div class="scan-message empty" id="scan-message" role="status" aria-live="polite">Ready to scan your local network.</div>
+    <section class="server-section" aria-label="Available servers">
+      <div class="server-heading" aria-hidden="true"><span>Server</span><span>Address and ID</span></div>
+      <div class="server-list" id="server-list"></div>
+    </section>
+
+    <footer class="bottom-bar">
+      <p id="selection-hint">Select a server to continue</p>
+      <button class="connect-button" id="connect-button" type="button" disabled>Connect <span aria-hidden="true">&#8599;</span></button>
+    </footer>
+  </main>
+  <script src="renderer.js"></script>
+</body>
+</html>
